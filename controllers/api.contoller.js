@@ -137,16 +137,73 @@ module.exports.inserShotCode = async(req,res)=>{
 }
 
 module.exports.getVisitorByDate  = async(req,res)=>{
+  UrlData.aggregate(
+    [
+        { $match: {} },
+        { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: "$timestamp" } }, count: { $sum: 1 } } },
+        { $sort: { _id: 1 } }
+    ]
+).then((mydoc)=>{
+  res.status(200).send(mydoc);
+  
+}).catch((error)=>{
+res.status(404).json({
+  success:false,
+  message:"Data not Found",
+  error
+});
+});
 
+// .then(doc => {
+//     /* if you need a date object */
+//     doc.forEach(function(value, index) {
+//           doc[index]._id = new Date(value._id);
+//       }, this);
+//     console.log(doc);
+    
+// }).catch(reject);
 }
 module.exports.getVisotorByCountry  = async(req,res)=>{
+  UrlData.aggregate([
+    {"$group" : {_id:"$country", count:{$sum:1}}}
+]).then((mydoc)=>{
+  res.status(200).send(mydoc);
   
+}).catch((error)=>{
+res.status(404).json({
+  success:false,
+  message:"Data not Found",
+  error
+});
+});
 }
 module.exports.getVisotorByBrowser  = async(req,res)=>{
-        
+  UrlData.aggregate([
+    {"$group" : {_id:"$browser", count:{$sum:1}}}
+]).then((mydoc)=>{
+  res.status(200).send(mydoc);
+  
+}).catch((error)=>{
+res.status(404).json({
+  success:false,
+  message:"Data not Found",
+  error
+});
+});
 }
 module.exports.getVisotorByOs  = async(req,res)=>{
-  
+  UrlData.aggregate([
+    {"$group" : {_id:"$os", count:{$sum:1}}}
+]).then((mydoc)=>{
+    res.status(200).send(mydoc);
+    
+}).catch((error)=>{
+  res.status(404).json({
+    success:false,
+    message:"Data not Found",
+    error
+  });
+});
 }
 // functions
 const shortenURL = async(url) => {
