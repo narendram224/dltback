@@ -171,7 +171,7 @@ res.status(404).json({
 });
 });
 }
-module.exports.getVisotorByOs  = async(req,res)=>{
+module.exports.getVisotorByOs  = (req,res)=>{
   UrlData.aggregate([
     {"$group" : {_id:"$os", count:{$sum:1}}}
 ]).then((mydoc)=>{
@@ -186,7 +186,7 @@ module.exports.getVisotorByOs  = async(req,res)=>{
 });
 }
 
-module.exports.totalCount=async(req,res)=>{
+module.exports.totalCount=(req,res)=>{
     UrlData.count().then((count)=>{res.status(200).send({count})})
     .catch((erorr)=>{
       res.status(404).json({
