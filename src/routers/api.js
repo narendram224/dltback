@@ -18,7 +18,7 @@ router.get('/byDate',apiController.getVisitorByDate);
 router.get('/byCountry',apiController.getVisotorByCountry);
 router.get('/byBrowser',apiController.getVisotorByBrowser);
 router.get('/byOs',apiController.getVisotorByOs);
-
+router.get('/total',apiController.totalCount);
  router.get('/:ShortCode',apiController.storData);
 
  
