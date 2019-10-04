@@ -22,7 +22,7 @@ module.exports.storData = async(req,res)=>{
                                  
                               // res.status(200).send(result);
                                
-                               res.redirect('http://localhost:4200/dashboard');
+                               res.redirect('https://dltfront.herokuapp.com/dashboard');
       //                         } else {
       //                             res.status(404).send(err);
       //                         }
