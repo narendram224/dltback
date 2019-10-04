@@ -16,7 +16,7 @@ app.use(cors());
 // var UserAgent = new useragent().parse(navigator.useragent);
     // console.log(UserAgent);
     
-  app.use('/',api);
+ app.use('/',api);
 // app.get('/:id', function (req, res) {
 //     // res.send('ab(cd)?e')
 //     const str = req.params.id;

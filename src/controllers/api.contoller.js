@@ -7,27 +7,30 @@ const useragent = require('express-useragent');
 const express = require('express');
 const app = express();
 app.use(useragent.express());
+
 module.exports.storData = async(req,res)=>{
     const shortId = req.params.ShortCode;
     const shotcodePlus = shortId.slice(-1);
-  
      if (shotcodePlus==='+') {
       console.log("plus is found");
       const newStr = shortId.slice(0,-1); 
                 // an get api call which give the data acccounding to the short id
-                await ShortModel.findOne({shortCode:newStr},(err,data)=>{
-                  if (data) {
-                       UrlData.find({shortCodeId:data._id},(err,result)=>{
-                              if (result) {
-                                  res.status(200).send(result);
-                              } else {
-                                  res.status(404).send(err);
-                              }
-                       })
-                  } else {
-                      res.status(404).send("data not found");
-                  }
-      });
+                // await ShortModel.findOne({shortCode:newStr},(err,data)=>{
+                //   if (data) {
+                //        UrlData.find({shortCodeId:data._id},(err,result)=>{
+                //               if (result) {
+                                 
+                              // res.status(200).send(result);
+                               
+                               res.redirect('http://localhost:4200/dashboard');
+      //                         } else {
+      //                             res.status(404).send(err);
+      //                         }
+      //                  })
+      //             } else {
+      //                 res.status(404).send("data not found");
+      //             }
+      // });
     
     }
     else{
@@ -61,29 +64,26 @@ module.exports.storData = async(req,res)=>{
               //   res.send(ShortDataobj);
           })
           .catch(error => {
-              console.log(error);
+              res.status(404).json({
+                message:"Data not found",
+                success:false,
+                error
+              });
           });
         }
   
         res.redirect(doc.originalUrl)
       })
-      .catch(console.error);
+      .catch(error => {
+        res.status(404).json({
+          message:"Data not found",
+          success:false,
+          error
+        });
+    });
     }
-  
-  
 }
-
-
 module.exports.inserShotCode = async(req,res)=>{
-    // await  User.findOneAndUpdate({_id:req.params.id},req.body,(err,updatedUser)=>{
-    //      if (err) {
-    //          res.status(403).send("User not found Error",err);
-    //      }else if(updatedUser){
-    //          res.send(updatedUser);
-
-    //      }
-    //  });    
-
     let originalUrl;
     try {
       originalUrl = new URL(req.body.url);
@@ -107,33 +107,13 @@ module.exports.inserShotCode = async(req,res)=>{
           upsert: true,
         }
       ).then((response)=>{
-          console.log(response);
           res.status(200).json({
                 originalUrl: response.originalUrl,
                 shortCode: response.shortCode,
-              });;
-          
+              });   
       }).catch((error)=>{
           res.status(404).send(error);
-          console.log(error);
-          
-      });
-    // console.log("the url is",originalUrl.href);
-    
-    shortenURL(originalUrl.href)
-    // .then(result => {
-    //   const doc = result; 
-    //   console.log("the responae is ",doc);
-      
-    //   res.json({
-    //     originalUrl: doc.originalUrl,
-    //     shortCode: doc.shortCode,
-    //   });
-    // })
-    // .catch((error)=>{
-    //     res.status(404).send(error);
-    // });
-
+      }); 
 }
 
 module.exports.getVisitorByDate  = async(req,res)=>{
@@ -205,12 +185,17 @@ module.exports.getVisotorByOs  = async(req,res)=>{
   });
 });
 }
+
+module.exports.totalCount=async(req,res)=>{
+    UrlData.count().then((count)=>{res.status(200).send({count})})
+    .catch((erorr)=>{
+      res.status(404).json({
+        message:"Data not found",
+        success:false,
+        erorr
+      })
+    })
+}
 // functions
-const shortenURL = async(url) => {
-    console.log(url);
-    
-   let  shortenedURLs = ShortModel;
-   
-  };
   const checkExistorNot = (code) => ShortModel
   .findOne({ shortCode: code });
